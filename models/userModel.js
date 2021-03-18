@@ -20,14 +20,20 @@ const userSchema = mongoose.Schema({
     type: String,
     required: [true, 'Please select a gender.'],
     enum: ['male', 'female'],
+    default: 'female',
   },
   age: Number,
   state: String,
   nationality: String,
   role: {
     type: String,
-    enum: ['user', 'ngo', 'go', 'security-personnel', 'admin'],
+    enum: ['user', 'admin'],
     default: 'user',
+  },
+  personnel: {
+    type: String,
+    enum: ['regular', 'ngo', 'go', 'security-personnel'],
+    default: 'regular',
   },
   password: {
     type: String,

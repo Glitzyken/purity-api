@@ -1,4 +1,4 @@
-const crypto = require('crypto');
+// const crypto = require('crypto');
 const { promisify } = require('util');
 const jwt = require('jsonwebtoken');
 const User = require('./../models/userModel');
@@ -37,6 +37,12 @@ const createSendToken = (user, statusCode, req, res) => {
 exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await User.create({
     email: req.body.email,
+    username: req.body.username,
+    gender: req.body.gender,
+    age: req.body.age,
+    state: req.body.state,
+    nationality: req.body.nationality,
+    personnel: req.body.personnel,
     password: req.body.password,
     passwordConfirm: req.body.passwordConfirm,
   });
@@ -203,8 +209,21 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   user.password = req.body.password;
   user.passwordConfirm = req.body.passwordConfirm;
   await user.save();
-  // User.findByIdAndUpdate will NOT work as intended!
 
   // 4) Log user in, send JWT
   createSendToken(user, 200, req, res);
+});
+
+// Admin Control:
+exports.createAdmin = catchAsync(async (req, res) => {
+  let body = req.body;
+  body.role = 'admin';
+  const newUser = await User.create(body);
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      newUser,
+    },
+  });
 });
